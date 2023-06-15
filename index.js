@@ -7,7 +7,7 @@ async function func() {
     console.log(`This confirms that I'm editing channels at ${new Date().toLocaleTimeString()}`)
     const categories = new Discord.Collection()
     const { data } = await axios(config.link)
-    const [_, elementToSplit] = data.split('<body>');
+    const [_, elementToSplit] = data.split('<code>');
     const { Servers } = JSON.parse(elementToSplit.split('<script>')[0]);
     for (const server in Servers) {
         // Instantiate categories in Collection
