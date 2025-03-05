@@ -1,10 +1,3 @@
--- --------------------------------------------------------
--- Host:                         db.legacyhosting.xyz
--- Server version:               11.7.1-MariaDB-ubu2204 - mariadb.org binary distribution
--- Server OS:                    debian-linux-gnu
--- HeidiSQL Version:             12.6.0.6765
--- --------------------------------------------------------
-
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET NAMES utf8 */;
 /*!50503 SET NAMES utf8mb4 */;
@@ -14,12 +7,9 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
-
--- Dumping database structure for lega_lh_status
 CREATE DATABASE IF NOT EXISTS `lega_lh_status` /*!40100 DEFAULT CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci */;
 USE `lega_lh_status`;
 
--- Dumping structure for table lega_lh_status.maintainance
 CREATE TABLE IF NOT EXISTS `maintainance` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `status` enum('Planned','Currently','Finished','') DEFAULT 'Planned',
@@ -41,9 +31,6 @@ CREATE TABLE IF NOT EXISTS `maintainance` (
   UNIQUE KEY `id` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
--- Data exporting was unselected.
-
--- Dumping structure for table lega_lh_status.servers
 CREATE TABLE IF NOT EXISTS `servers` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `activity` int(1) NOT NULL DEFAULT 1,
@@ -65,9 +52,6 @@ CREATE TABLE IF NOT EXISTS `servers` (
   UNIQUE KEY `discord_id` (`discord_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
--- Data exporting was unselected.
-
--- Dumping structure for table lega_lh_status.session
 CREATE TABLE IF NOT EXISTS `session` (
   `id` varchar(128) NOT NULL,
   `ip_address` varchar(45) NOT NULL,
@@ -76,9 +60,6 @@ CREATE TABLE IF NOT EXISTS `session` (
   KEY `ci_sessions_timestamp` (`timestamp`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
--- Data exporting was unselected.
-
--- Dumping structure for table lega_lh_status.users
 CREATE TABLE IF NOT EXISTS `users` (
   `user_id` int(11) NOT NULL AUTO_INCREMENT,
   `username` text NOT NULL,
@@ -89,16 +70,11 @@ CREATE TABLE IF NOT EXISTS `users` (
   UNIQUE KEY `user_id` (`user_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
--- Data exporting was unselected.
-
--- Dumping structure for table lega_lh_status.users_auth
 CREATE TABLE IF NOT EXISTS `users_auth` (
   `steam_id` bigint(17) NOT NULL DEFAULT 0,
   `time` int(11) NOT NULL DEFAULT 0,
   `token` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
-
--- Data exporting was unselected.
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
