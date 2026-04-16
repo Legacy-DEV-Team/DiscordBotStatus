@@ -1,59 +1,116 @@
-## Discord Bot Status
+# Discord Bot Status
 
-This project is a Discord bot that fetches data from an external API and updates the status of Discord categories and channels based on server activity and maintenance. It uses `discord.js` to interact with Discord and `cheerio` to parse HTML data from the API.
+A Discord bot that reads status data from a JSON endpoint and updates channel and category names across multiple Discord servers.
 
-## Features
+## What It Does
 
-- Fetches data from a configurable API.
-- Updates Discord categories and channels based on server status.
-- Periodic updates every 5 minutes.
-- Logs all activities to a local file for monitoring purposes.
+- Reads a `servers` array from your website/API
+- Updates Discord channels using `suggested_channel`
+- Updates Discord categories based on grouped server `status_icon` values
+- Supports multiple guilds by using `discord_server_id`
+- Runs every 5 minutes to avoid unnecessary rate-limit pressure
+- Writes activity and errors to `logs/index.log`
 
-## Installation
+## Naming Format
 
-### Prerequisites
-- Node.js (version 12 or higher)
-- A Discord bot token (from the Discord Developer Portal)
-- A JSON link to fetch server data
+Channel and category names use this format:
 
-### Setup
+```text
+[🔴] Channel Name
+[🟡] Category Name
+[🟢] Server Name
+```
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/Legacy-DEV-Team/DiscordBotStatus.git
-   cd Discord-Bot-Status
-   ```
+## Category Status Rules
 
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
+The bot uses `status_icon` as the source of truth for server color.
 
-3. Configure the bot:
-   - Open the `config.json` file and insert your bot token and the JSON link.
-   ```json
-   {
-     "token": "YOUR_DISCORD_BOT_TOKEN",
-     "link": "YOUR_JSON_API_LINK"
-   }
-   ```
+- A category becomes `🟡` if any server in that category is `🟡`
+- A category becomes `🟡` if the category contains both `🟢` and `🔴` servers
+- A category becomes `🟢` if all tracked servers in it are green
+- A category becomes `🔴` if all tracked servers in it are red
 
-4. Run the bot:
-   ```bash
-   node index.js
-   ```
+Channel names are updated directly from `suggested_channel`.
 
-The bot will log in, fetch data from the API, and update the Discord categories and channels accordingly.
+## Required API Format
+
+The endpoint in `config.js` must return JSON with a top-level `servers` array.
+
+Example:
+
+```json
+{
+  "source": "Server Checker",
+  "servers": [
+    {
+      "discord_server_id": "1060670756591259709",
+      "discord_category_id": "1060726992028315749",
+      "discord_channel_id": "1060729008993603595",
+      "discord_category": "Minecraft",
+      "suggested_category": "[🟢] Minecraft",
+      "suggested_channel": "[🟢] LG Craft",
+      "status_icon": "🟢"
+    }
+  ]
+}
+```
+
+## Fields the Bot Uses
+
+- `discord_server_id`: which Discord server/guild to update
+- `discord_category_id`: which category to update
+- `discord_channel_id`: which channel to update
+- `discord_category`: base category name used when rebuilding the category label
+- `suggested_channel`: final channel name to apply
+- `status_icon`: server color used when computing category color
+
+`suggested_category` may exist in the payload, but the bot currently computes the final category name itself so mixed states work correctly.
+
+## Setup
+
+1. Install dependencies:
+
+```bash
+npm install
+```
+
+2. Configure [config.js](./config.js):
+
+```js
+export default {
+  token: "YOUR_DISCORD_BOT_TOKEN",
+  link: "https://your-site.example/status.json"
+};
+```
+
+3. Start the bot:
+
+```bash
+node index.js
+```
+
+## Requirements
+
+- Node.js 18+
+- A Discord bot with permission to manage channels
+- A JSON endpoint that returns the required fields
 
 ## Logging
 
-All logs are stored in the `logs/index.log` file for tracking and debugging purposes.
+The bot writes logs to:
+
+```text
+logs/index.log
+```
+
+This includes startup events, rename operations, skipped records, and API/Discord errors.
+
+## Notes
+
+- The bot only needs the `Guilds` intent
+- The sync interval is 5 minutes (`300000` ms)
+- It fetches guilds and channels by ID, so it can work across multiple Discord servers
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Acknowledgements
-
-- [discord.js](https://discord.js.org/) - The library used for interacting with the Discord API.
-- [cheerio](https://cheerio.js.org/) - The library used for parsing HTML data.
+MIT. See [LICENSE](./LICENSE).

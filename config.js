@@ -1,5 +1,4 @@
-module.exports = {
-  token:
-    "",
+export default {
+  token: "",
   link: "",
 };
